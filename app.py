@@ -1,10 +1,12 @@
-# app.py
-
 import streamlit as st
 import streamlit.components.v1 as components
 import random
 import time
 import html
+
+# =========================================================
+# 페이지 설정
+# =========================================================
 
 st.set_page_config(
     page_title="성지온 냄새 뽑기",
@@ -13,7 +15,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# 전체 디자인
+# 전체 CSS
 # =========================================================
 
 st.markdown("""
@@ -21,148 +23,231 @@ st.markdown("""
 
 .stApp {
     background:
-        radial-gradient(circle at 50% -10%, #30305c 0%, #111122 38%, #050508 75%);
+        radial-gradient(circle at 50% -15%, #30305b 0%, #17172d 30%, #090912 65%, #040407 100%);
     color: white;
 }
 
 .block-container {
     max-width: 1250px;
+    padding-top: 2rem;
 }
 
 .main-title {
-    text-align:center;
-    font-size:52px;
-    font-weight:1000;
-    margin-bottom:4px;
-    text-shadow:
-        0 0 12px rgba(255,255,255,.35),
-        0 0 30px rgba(160,100,255,.25);
+    text-align: center;
+    font-size: 52px;
+    font-weight: 1000;
+    margin-bottom: 4px;
+
+    background: linear-gradient(
+        90deg,
+        #ffffff,
+        #aebfff,
+        #ffffff
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter:
+        drop-shadow(0 0 20px rgba(150,170,255,.32));
 }
 
 .subtitle {
-    text-align:center;
-    opacity:.72;
-    margin-bottom:25px;
-    font-size:18px;
+    text-align: center;
+    color: rgba(230,233,255,.68);
+    font-size: 17px;
+    margin-bottom: 28px;
 }
 
-/* 카드 */
+/* --------------------------
+   카드
+-------------------------- */
 
 .gacha-card {
-    height: 100%;
-    min-height: 260px;
-    padding: 22px;
-    border-radius: 22px;
+    min-height: 235px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 28px 24px;
+    margin: 8px 0;
+
+    border-radius: 24px;
+
     background:
+        radial-gradient(
+            circle at top,
+            rgba(100,100,180,.13),
+            transparent 50%
+        ),
         linear-gradient(
             145deg,
-            rgba(255,255,255,.10),
-            rgba(255,255,255,.025)
+            rgba(24,24,48,.97),
+            rgba(8,8,18,.98)
         );
-    border: 2px solid rgba(255,255,255,.3);
-    box-shadow: 0 8px 30px rgba(0,0,0,.3);
-    transition: .3s;
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.05),
+        0 15px 45px rgba(0,0,0,.32);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
 }
 
 .gacha-card:hover {
-    transform: translateY(-7px) scale(1.015);
-}
+    transform: translateY(-5px) scale(1.012);
 
-.card-rarity {
-    font-size: 38px;
-    font-weight: 1000;
-    margin-bottom: 12px;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 20px 55px rgba(0,0,0,.40);
 }
 
 .card-name {
-    font-size: 19px;
-    font-weight: 850;
-    line-height: 1.45;
-    margin-bottom: 16px;
+    font-size: 21px;
+    font-weight: 900;
+    line-height: 1.5;
+
+    text-align: center;
+
+    color: #f4f5ff;
+
+    margin-bottom: 18px;
+
+    text-shadow:
+        0 0 15px rgba(190,200,255,.12);
 }
 
 .card-description {
     font-size: 14px;
-    line-height: 1.65;
-    opacity: .78;
+    line-height: 1.75;
+
+    text-align: center;
+
+    color: rgba(225,228,245,.70);
 }
 
-/* 등급 색 */
+/* 카드 테두리 색 */
 
 .r-F {
-    border-color:#888;
-    box-shadow:0 0 18px rgba(150,150,150,.25);
+    border-color: rgba(160,160,170,.28);
 }
 
 .r-E {
-    border-color:#9d7a55;
-    box-shadow:0 0 20px rgba(157,122,85,.30);
+    border-color: rgba(180,135,90,.35);
 }
 
 .r-D {
-    border-color:#59db78;
-    box-shadow:0 0 22px rgba(89,219,120,.30);
+    border-color: rgba(90,220,130,.40);
 }
 
 .r-C {
-    border-color:#4db8ff;
-    box-shadow:0 0 25px rgba(77,184,255,.35);
+    border-color: rgba(70,170,255,.44);
 }
 
 .r-B {
-    border-color:#a75cff;
-    box-shadow:0 0 28px rgba(167,92,255,.40);
+    border-color: rgba(165,95,255,.52);
 }
 
 .r-A {
-    border-color:#ff59ac;
-    box-shadow:0 0 32px rgba(255,89,172,.45);
+    border-color: rgba(255,85,175,.55);
 }
 
 .r-S {
-    border-color:#ffd84a;
+    border-color: rgba(255,215,60,.72);
+
     box-shadow:
-        0 0 15px rgba(255,216,74,.7),
-        0 0 40px rgba(255,216,74,.35);
+        0 0 25px rgba(255,215,60,.13),
+        0 15px 45px rgba(0,0,0,.34);
 }
 
 .r-SS {
-    border-color:white;
+    border-color: rgba(215,250,255,.85);
+
     box-shadow:
-        0 0 12px white,
-        0 0 35px #5ee7ff,
-        0 0 55px #ba62ff;
+        0 0 30px rgba(90,220,255,.18),
+        0 0 55px rgba(180,90,255,.10),
+        0 15px 45px rgba(0,0,0,.35);
 }
 
 .r-SSS {
-    border-color:white;
-    animation:sssrainbow 1.7s infinite linear;
+    border-color: rgba(255,255,255,.92);
+    animation: sssGlow 2.4s linear infinite;
 }
 
-@keyframes sssrainbow {
+@keyframes sssGlow {
+
     0% {
-        box-shadow:0 0 15px red, 0 0 40px orange;
+        box-shadow:
+            0 0 22px rgba(255,80,120,.22),
+            0 15px 50px rgba(0,0,0,.35);
     }
-    25% {
-        box-shadow:0 0 15px yellow, 0 0 45px lime;
+
+    33% {
+        box-shadow:
+            0 0 28px rgba(70,220,255,.26),
+            0 15px 50px rgba(0,0,0,.35);
     }
-    50% {
-        box-shadow:0 0 15px cyan, 0 0 50px blue;
+
+    66% {
+        box-shadow:
+            0 0 28px rgba(185,95,255,.28),
+            0 15px 50px rgba(0,0,0,.35);
     }
-    75% {
-        box-shadow:0 0 15px violet, 0 0 45px magenta;
-    }
+
     100% {
-        box-shadow:0 0 15px red, 0 0 40px orange;
+        box-shadow:
+            0 0 22px rgba(255,80,120,.22),
+            0 15px 50px rgba(0,0,0,.35);
     }
 }
+
+
+/* --------------------------
+   천장 박스
+-------------------------- */
 
 .pity-box {
-    padding:16px 20px;
-    border:1px solid rgba(255,255,255,.18);
-    border-radius:16px;
-    background:rgba(255,255,255,.05);
-    text-align:center;
+    padding: 18px 20px;
+
+    border-radius: 18px;
+
+    border:
+        1px solid rgba(255,255,255,.11);
+
+    background:
+        rgba(255,255,255,.04);
+
+    text-align: center;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.pity-big {
+    font-size: 30px;
+    font-weight: 1000;
+}
+
+
+/* --------------------------
+   도감
+-------------------------- */
+
+.collection-item {
+    padding: 12px 15px;
+    margin-bottom: 7px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    border:
+        1px solid rgba(255,255,255,.06);
 }
 
 </style>
@@ -175,106 +260,105 @@ st.markdown("""
 
 def make_cards(names, rarity):
 
-    rarity_lore = {
+    descriptions = {
 
         "F": [
-            "별다른 수식어가 필요 없는 기본형이다."
+            "수많은 수식어와 전설이 시작되기 전의 가장 순수한 기본형이다."
         ],
 
         "E": [
-            "아직은 평범하지만 분명한 존재감을 남긴다.",
-            "미세한 공기의 변화와 함께 등장한다고 전해진다.",
-            "누군가 지나간 뒤 남은 흔적처럼 은은하게 감지된다.",
-            "본격적인 전설이 시작되기 전의 초기 형태다.",
-            "관측 장비 없이도 가까이에서는 감지할 수 있다고 한다.",
+            "아직은 평범하지만 분명한 존재감을 남기는 냄새로 기록되어 있다.",
+            "미세한 공기의 변화와 함께 감지된다는 관측 기록이 존재한다.",
+            "누군가 지나간 뒤 남은 흔적처럼 은은하게 감지되는 형태다.",
+            "본격적인 전설이 시작되기 전의 초기 단계로 분류된다.",
+            "별도의 측정 장비 없이도 근거리에서 감지할 수 있다고 한다.",
         ],
 
         "D": [
-            "주변의 기류가 아주 조금 흔들리는 현상이 보고됐다.",
-            "평범한 냄새와는 다른 묘한 존재감을 가진 카드다.",
-            "복도와 교실을 넘나드는 이동성이 특징이다.",
-            "감지 범위가 E등급보다 눈에 띄게 확장됐다.",
-            "바람의 방향에 따라 위력이 달라진다는 소문이 있다.",
+            "주변 기류가 미세하게 흔들리는 현상이 함께 보고된 카드다.",
+            "평범한 냄새와는 다른 묘한 존재감을 가진 것으로 기록되어 있다.",
+            "복도와 교실을 넘나드는 이동성이 특징으로 알려져 있다.",
+            "E등급보다 감지 범위가 눈에 띄게 넓어진 형태다.",
+            "바람의 방향에 따라 체감되는 존재감이 달라진다고 전해진다.",
         ],
 
         "C": [
-            "이 단계부터 냄새에 서사가 붙기 시작한다.",
-            "공기 중에서 독특한 존재감을 형성하는 카드다.",
-            "주변 공간의 분위기를 바꾼다는 전설이 전해진다.",
-            "단순한 냄새를 넘어 하나의 현상으로 분류되기 시작했다.",
-            "관측자에 따라 전혀 다른 느낌으로 기록되는 신비한 카드다.",
+            "이 단계부터 냄새 자체에 하나의 서사가 붙기 시작한다.",
+            "공기 중에서 독특한 분위기를 형성하는 카드로 분류된다.",
+            "주변 공간의 분위기를 변화시킨다는 전설이 전해진다.",
+            "단순한 냄새를 넘어 하나의 현상으로 기록되기 시작한 단계다.",
+            "관측자마다 서로 다른 인상을 남기는 신비한 특성이 있다.",
         ],
 
         "B": [
             "천공과 대기의 움직임을 소재로 기록된 상급 냄새 카드다.",
-            "장엄한 이름과 달리 정체는 여전히 성지온의 냄새다.",
+            "장엄한 이름과 달리 근원은 여전히 성지온의 냄새다.",
             "이 등급부터 카드명이 지나치게 웅장해지는 특징이 있다.",
-            "냄새 연구자들 사이에서 본격적인 전설급 후보로 분류된다.",
-            "주변 공기마저 배경 연출로 사용한다는 설정을 가진 카드다.",
+            "냄새 연구자들 사이에서 전설급 후보로 분류되기 시작한 단계다.",
+            "주변 공기 자체가 하나의 배경 연출처럼 묘사되는 카드다.",
         ],
 
         "A": [
-            "수많은 별과 은하를 동원해야 설명할 수 있다는 최상급 냄새다.",
-            "이름 하나를 읽는 데 상당한 시간이 걸리는 것으로 유명하다.",
-            "신화와 우주적 표현이 결합된 초월계 냄새 카드다.",
-            "냄새 하나를 설명하기 위해 시공간까지 등장하기 시작한다.",
-            "평범함에서 너무 멀리 와 버린 초고등급 카드다.",
+            "별과 은하까지 동원해야 설명할 수 있다는 초상급 냄새다.",
+            "이름 하나를 전부 읽는 데 시간이 걸리는 것으로 유명하다.",
+            "신화와 우주적 표현이 결합된 초월계 카드로 기록되어 있다.",
+            "냄새 하나를 묘사하기 위해 시공간까지 등장하기 시작한다.",
+            "평범함에서 매우 멀리 떨어진 초고등급 카드다.",
         ],
 
         "S": [
-            "전설이라는 단어조차 부족하다는 설정의 초희귀 카드다.",
-            "삼천세계와 은하가 동원되는 과장미의 절정을 보여준다.",
-            "등장 순간 뽑기 화면 전체가 요란해지는 전설급 카드다.",
-            "이쯤 되면 냄새보다 카드명의 위력이 더 강하다고 평가된다.",
-            "현실적인 설명을 포기하고 신화의 영역으로 진입한 카드다.",
+            "전설이라는 단어만으로는 설명하기 부족하다는 초희귀 카드다.",
+            "삼천세계와 은하를 동원한 과장미가 절정에 도달한 형태다.",
+            "등장 순간 화면 전체가 요란해지는 것으로 알려진 전설급 카드다.",
+            "이쯤 되면 냄새보다 이름의 존재감이 더 강하다고 평가된다.",
+            "현실적인 설명을 포기하고 신화의 영역으로 넘어간 카드다.",
         ],
 
         "SS": [
-            "측정 장비가 오류를 표시한다는 설정의 극희귀 카드다.",
+            "측정 장비가 오류를 표시한다는 설정을 가진 극희귀 카드다.",
             "천상천하와 시공간을 모두 끌어들인 최고급 미사여구를 자랑한다.",
             "카드 하나에 세계관 하나가 들어간 수준의 이름을 가진다.",
-            "등장 순간 화면이 과도하게 빛나는 것으로 유명하다.",
+            "등장 순간 화면이 과도하게 발광하는 것으로 유명하다.",
             "SSS 바로 아래에 위치한 거의 최종 단계의 냄새 카드다.",
         ],
 
         "SSS": [
-            "수많은 미사여구를 모두 초월한 끝에 결국 본체로 돌아왔다."
+            "모든 미사여구를 끝까지 쌓은 뒤 다시 본체로 돌아온 최종 형태다."
         ]
+
     }
 
     result = []
 
     for i, name in enumerate(names):
 
-        lore = rarity_lore[rarity][i % len(rarity_lore[rarity])]
-
-        description = (
-            f"{lore} "
-            f"공식 도감에서는 「{name}」이라는 이름으로 기록되어 있다."
-        )
+        base = descriptions[rarity][
+            i % len(descriptions[rarity])
+        ]
 
         result.append({
             "name": name,
-            "description": description
+            "description": base
         })
 
     return result
 
 
 # =========================================================
-# F 1장
+# 카드 데이터
 # =========================================================
 
 CARDS = {}
+
+
+# F 1장
 
 CARDS["F"] = make_cards([
     "성지온"
 ], "F")
 
 
-# =========================================================
 # E 5장
-# =========================================================
 
 CARDS["E"] = make_cards([
 
@@ -291,9 +375,7 @@ CARDS["E"] = make_cards([
 ], "E")
 
 
-# =========================================================
 # D 10장
-# =========================================================
 
 CARDS["D"] = make_cards([
 
@@ -320,15 +402,13 @@ CARDS["D"] = make_cards([
 ], "D")
 
 
-# =========================================================
 # C 20장
-# =========================================================
 
 C_PREFIX = [
     "교실의 공기 흐름마저 바꾸는",
     "푸른 하늘 아래 장엄하게 퍼지는",
     "은빛 달빛과 함께 깨어난",
-    "별빛 사이를 유영하는"
+    "별빛 사이를 유영하는",
 ]
 
 C_CORE = [
@@ -336,21 +416,22 @@ C_CORE = [
     "성지온의 기류진동 냄새",
     "성지온의 미지관측 냄새",
     "성지온의 공간초월 냄새",
-    "성지온의 황혼잔존 냄새"
+    "성지온의 황혼잔존 냄새",
 ]
 
 C_NAMES = [
-    f"{prefix} {core}"
-    for prefix in C_PREFIX
-    for core in C_CORE
+    f"{a} {b}"
+    for a in C_PREFIX
+    for b in C_CORE
 ]
 
-CARDS["C"] = make_cards(C_NAMES, "C")
+CARDS["C"] = make_cards(
+    C_NAMES,
+    "C"
+)
 
 
-# =========================================================
 # B 40장
-# =========================================================
 
 B_PREFIX = [
     "천공을 가르며 강림한",
@@ -372,17 +453,18 @@ B_CORE = [
 ]
 
 B_NAMES = [
-    f"{prefix} {core}"
-    for prefix in B_PREFIX
-    for core in B_CORE
+    f"{a} {b}"
+    for a in B_PREFIX
+    for b in B_CORE
 ]
 
-CARDS["B"] = make_cards(B_NAMES, "B")
+CARDS["B"] = make_cards(
+    B_NAMES,
+    "B"
+)
 
 
-# =========================================================
 # A 40장
-# =========================================================
 
 A_PREFIX = [
     "백만 별빛과 억겁의 세월을 머금은",
@@ -404,17 +486,18 @@ A_CORE = [
 ]
 
 A_NAMES = [
-    f"{prefix} {core}"
-    for prefix in A_PREFIX
-    for core in A_CORE
+    f"{a} {b}"
+    for a in A_PREFIX
+    for b in A_CORE
 ]
 
-CARDS["A"] = make_cards(A_NAMES, "A")
+CARDS["A"] = make_cards(
+    A_NAMES,
+    "A"
+)
 
 
-# =========================================================
 # S 15장
-# =========================================================
 
 S_NAMES = [
 
@@ -450,12 +533,13 @@ S_NAMES = [
 
 ]
 
-CARDS["S"] = make_cards(S_NAMES, "S")
+CARDS["S"] = make_cards(
+    S_NAMES,
+    "S"
+)
 
 
-# =========================================================
 # SS 5장
-# =========================================================
 
 SS_NAMES = [
 
@@ -471,12 +555,13 @@ SS_NAMES = [
 
 ]
 
-CARDS["SS"] = make_cards(SS_NAMES, "SS")
+CARDS["SS"] = make_cards(
+    SS_NAMES,
+    "SS"
+)
 
 
-# =========================================================
 # SSS 1장
-# =========================================================
 
 CARDS["SSS"] = make_cards([
     "그냥 성지온"
@@ -484,8 +569,7 @@ CARDS["SSS"] = make_cards([
 
 
 # =========================================================
-# 등급과 기본 확률
-# 천장 뽑기는 아래 확률과 별도로 SS가 확정된다.
+# 등급 / 확률
 # =========================================================
 
 RARITIES = [
@@ -497,20 +581,24 @@ RARITIES = [
     "A",
     "S",
     "SS",
-    "SSS"
+    "SSS",
 ]
 
+# 총합 100
+# F를 기존보다 낮췄다.
+
 PROBABILITIES = [
-    30.0,   # F
-    25.0,   # E
-    17.0,   # D
-    10.0,   # C
-    7.0,    # B
-    5.0,    # A
-    3.5,    # S
-    2.0,    # SS
-    0.5,    # SSS
+    25.0,   # F
+    24.0,   # E
+    18.0,   # D
+    11.0,   # C
+    8.0,    # B
+    6.0,    # A
+    4.5,    # S
+    2.8,    # SS
+    0.7,    # SSS
 ]
+
 
 RARITY_ORDER = {
     "F": 0,
@@ -521,12 +609,25 @@ RARITY_ORDER = {
     "A": 5,
     "S": 6,
     "SS": 7,
-    "SSS": 8
+    "SSS": 8,
+}
+
+
+RARITY_COLORS = {
+    "F": "#aaaaaf",
+    "E": "#b88a60",
+    "D": "#61e78c",
+    "C": "#5bbcff",
+    "B": "#ab67ff",
+    "A": "#ff63b5",
+    "S": "#ffdb48",
+    "SS": "#dffcff",
+    "SSS": "#ffffff",
 }
 
 
 # =========================================================
-# 세션
+# 세션 상태
 # =========================================================
 
 if "total_pulls" not in st.session_state:
@@ -540,49 +641,128 @@ if "collection" not in st.session_state:
 
 
 # =========================================================
+# 이전 버전 세션 자동 보정
+# =========================================================
+
+cleaned_history = []
+
+for item in st.session_state.history:
+
+    if not isinstance(
+        item,
+        dict
+    ):
+        continue
+
+    item.setdefault(
+        "pity",
+        False
+    )
+
+    item.setdefault(
+        "pull_number",
+        0
+    )
+
+    item.setdefault(
+        "rarity",
+        "F"
+    )
+
+    item.setdefault(
+        "name",
+        "알 수 없는 카드"
+    )
+
+    item.setdefault(
+        "description",
+        ""
+    )
+
+    cleaned_history.append(
+        item
+    )
+
+st.session_state.history = (
+    cleaned_history
+)
+
+
+# =========================================================
 # 뽑기 함수
 # =========================================================
 
 def draw_one():
 
-    next_pull = st.session_state.total_pulls + 1
+    next_pull = (
+        st.session_state.total_pulls
+        + 1
+    )
 
-    # -------------------------------------
-    # 100, 200, 300... 번째는 SS 확정
-    # -------------------------------------
+    # ---------------------------------------------
+    # 100, 200, 300... 번째는 SS 확정이다.
+    # SSS가 아니라 정확히 SS가 나온다.
+    # ---------------------------------------------
 
-    pity = (next_pull % 100 == 0)
+    pity = (
+        next_pull % 100 == 0
+    )
 
     if pity:
+
         rarity = "SS"
 
     else:
+
         rarity = random.choices(
             RARITIES,
             weights=PROBABILITIES,
             k=1
         )[0]
 
-    card = random.choice(CARDS[rarity])
+    card = random.choice(
+        CARDS[rarity]
+    )
 
-    st.session_state.total_pulls = next_pull
+    st.session_state.total_pulls = (
+        next_pull
+    )
 
     result = {
-        "pull_number": next_pull,
-        "rarity": rarity,
-        "name": card["name"],
-        "description": card["description"],
-        "pity": pity
+
+        "pull_number":
+            next_pull,
+
+        "rarity":
+            rarity,
+
+        "name":
+            card["name"],
+
+        "description":
+            card["description"],
+
+        "pity":
+            pity,
+
     }
 
-    st.session_state.history.insert(0, result)
+    st.session_state.history.insert(
+        0,
+        result
+    )
 
-    key = card["name"]
+    key = (
+        f'{rarity}|{card["name"]}'
+    )
 
-    if key not in st.session_state.collection:
-        st.session_state.collection[key] = 0
-
-    st.session_state.collection[key] += 1
+    st.session_state.collection[key] = (
+        st.session_state.collection.get(
+            key,
+            0
+        )
+        + 1
+    )
 
     return result
 
@@ -592,478 +772,1026 @@ def draw_many(amount):
     results = []
 
     for _ in range(amount):
-        results.append(draw_one())
+
+        results.append(
+            draw_one()
+        )
 
     return results
 
 
 # =========================================================
-# 3D 소환 연출
+# 3D 소환 애니메이션
 # =========================================================
 
-RARITY_COLORS = {
+def summon_animation(
+    rarity,
+    multi=False
+):
 
-    "F": "#999999",
-    "E": "#a67a52",
-    "D": "#55e479",
-    "C": "#55baff",
-    "B": "#ab64ff",
-    "A": "#ff5aac",
-    "S": "#ffda42",
-    "SS": "#e8ffff",
-    "SSS": "#ffffff",
-
-}
-
-
-def summon_animation(rarity, multi=False):
-
-    color = RARITY_COLORS[rarity]
-
-    intensity = RARITY_ORDER[rarity]
-
-    if intensity <= 2:
-        speed = "1.5s"
-        glow = 20
-
-    elif intensity <= 4:
-        speed = "1.1s"
-        glow = 35
-
-    elif intensity <= 6:
-        speed = ".8s"
-        glow = 55
-
-    else:
-        speed = ".55s"
-        glow = 80
-
-    label = (
-        f"10연차 최고 등급 : {rarity}"
-        if multi
-        else f"{rarity} 등급 반응 감지"
+    final_color = (
+        RARITY_COLORS[rarity]
     )
 
-    animation = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
+    # 화면에는 마지막 순간까지 rarity를 쓰지 않는다.
+    # JS에서 일정 시간이 지난 뒤에만 표시한다.
 
-    <style>
+    animation_html = f"""
+<!DOCTYPE html>
 
-    * {{
-        box-sizing:border-box;
-    }}
+<html>
 
-    body {{
-        margin:0;
-        overflow:hidden;
-        background:
-            radial-gradient(circle, {color}22 0%, transparent 65%);
-        font-family:Arial, sans-serif;
-    }}
+<head>
 
-    .scene {{
+<meta charset="UTF-8">
 
-        position:relative;
+<style>
 
-        height:360px;
+* {{
+    box-sizing:border-box;
+}}
 
-        display:flex;
+body {{
+    margin:0;
+    overflow:hidden;
 
-        justify-content:center;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(80,85,150,.10),
+            transparent 65%
+        );
 
-        align-items:center;
+    font-family:
+        Arial,
+        sans-serif;
+}}
 
-        perspective:900px;
 
-        overflow:hidden;
+.scene {{
 
-    }}
+    height:430px;
 
-    /* 뒷쪽 발광 */
+    position:relative;
 
-    .energy {{
+    display:flex;
 
-        position:absolute;
+    align-items:center;
 
-        width:190px;
-        height:190px;
+    justify-content:center;
 
-        border-radius:50%;
+    perspective:1100px;
 
-        background:{color};
+    overflow:hidden;
+}}
 
-        filter:blur(55px);
 
-        opacity:.45;
+/* ===========================================
+   별 파티클
+=========================================== */
 
-        animation:
-            energyPulse .7s infinite alternate,
-            energyGrow 2s ease-out;
+.particle {{
 
-    }}
+    position:absolute;
 
-    /* 회전 링 */
+    width:4px;
+    height:4px;
 
-    .ring {{
+    border-radius:50%;
 
-        position:absolute;
+    background:white;
 
-        width:230px;
-        height:230px;
+    opacity:0;
 
-        border:3px solid {color};
+    animation:
+        fly
+        2.1s
+        linear
+        infinite;
+}}
 
-        border-radius:50%;
 
-        box-shadow:
-            0 0 {glow}px {color},
-            inset 0 0 {glow}px {color};
+@keyframes fly {{
 
-        animation: ringSpin 1.2s linear infinite;
-
-    }}
-
-    .ring2 {{
-
-        position:absolute;
-
-        width:175px;
-        height:175px;
-
-        border:2px dashed white;
-
-        border-radius:50%;
-
-        opacity:.7;
-
-        transform:rotateX(68deg);
-
-        animation:ringReverse .8s linear infinite;
-
-    }}
-
-    /* 3D 큐브 */
-
-    .cube {{
-
-        width:100px;
-        height:100px;
-
-        position:relative;
-
-        transform-style:preserve-3d;
-
-        animation:
-            cubeSpin {speed} linear infinite,
-            summonScale 2s cubic-bezier(.2,.8,.2,1);
-
-    }}
-
-    .face {{
-
-        position:absolute;
-
-        width:100px;
-        height:100px;
-
-        border:2px solid white;
-
-        background:{color}55;
-
-        box-shadow:
-            inset 0 0 30px {color},
-            0 0 {glow}px {color};
-
-        backdrop-filter:blur(4px);
-
-    }}
-
-    .front {{
-        transform:rotateY(0deg) translateZ(50px);
-    }}
-
-    .back {{
-        transform:rotateY(180deg) translateZ(50px);
-    }}
-
-    .right {{
-        transform:rotateY(90deg) translateZ(50px);
-    }}
-
-    .left {{
-        transform:rotateY(-90deg) translateZ(50px);
-    }}
-
-    .top {{
-        transform:rotateX(90deg) translateZ(50px);
-    }}
-
-    .bottom {{
-        transform:rotateX(-90deg) translateZ(50px);
-    }}
-
-    /* 충격파 */
-
-    .shockwave {{
-
-        position:absolute;
-
-        width:60px;
-        height:60px;
-
-        border:4px solid {color};
-
-        border-radius:50%;
+    0% {{
+        transform:
+            translate(0,0)
+            scale(.2);
 
         opacity:0;
-
-        animation:shock 1.4s ease-out infinite;
-
     }}
 
-    .shockwave.second {{
-        animation-delay:.45s;
+    20% {{
+        opacity:.65;
     }}
 
-    .text {{
+    100% {{
+        transform:
+            translate(
+                var(--x),
+                var(--y)
+            )
+            scale(1.7);
 
-        position:absolute;
+        opacity:0;
+    }}
+}}
 
-        bottom:15px;
 
-        width:100%;
+/* ===========================================
+   에너지 핵
+=========================================== */
 
-        text-align:center;
+.energy {{
 
-        color:white;
+    position:absolute;
 
-        font-size:24px;
+    width:180px;
+    height:180px;
 
-        font-weight:900;
+    border-radius:50%;
 
-        text-shadow:
-            0 0 8px {color},
-            0 0 20px {color};
+    background:
+        radial-gradient(
+            circle,
+            rgba(240,240,255,.78),
+            rgba(120,120,230,.18),
+            transparent 70%
+        );
 
-        animation:textPulse .65s infinite alternate;
+    filter:blur(28px);
 
+    animation:
+        breathe
+        .48s
+        ease-in-out
+        infinite alternate;
+}}
+
+
+@keyframes breathe {{
+
+    from {{
+        transform:scale(.55);
+        opacity:.22;
     }}
 
-    @keyframes cubeSpin {{
+    to {{
+        transform:scale(1.35);
+        opacity:.58;
+    }}
+}}
 
-        from {{
-            transform:
-                rotateX(0deg)
-                rotateY(0deg)
-                rotateZ(0deg);
-        }}
 
-        to {{
-            transform:
-                rotateX(360deg)
-                rotateY(720deg)
-                rotateZ(360deg);
-        }}
+/* ===========================================
+   회전 고리
+=========================================== */
 
+.orbit {{
+
+    position:absolute;
+
+    width:260px;
+    height:260px;
+
+    border:
+        2px solid
+        rgba(225,230,255,.38);
+
+    border-radius:50%;
+
+    animation:
+        orbitA
+        .75s
+        linear
+        infinite;
+}}
+
+
+.orbit.two {{
+
+    width:205px;
+    height:205px;
+
+    border-style:dashed;
+
+    opacity:.65;
+
+    animation:
+        orbitB
+        .53s
+        linear
+        infinite;
+}}
+
+
+.orbit.three {{
+
+    width:315px;
+    height:315px;
+
+    opacity:.25;
+
+    animation:
+        orbitC
+        1.05s
+        linear
+        infinite;
+}}
+
+
+@keyframes orbitA {{
+
+    from {{
+        transform:
+            rotateX(68deg)
+            rotateZ(0deg);
     }}
 
-    @keyframes summonScale {{
+    to {{
+        transform:
+            rotateX(68deg)
+            rotateZ(360deg);
+    }}
+}}
 
-        0% {{
-            scale:.05;
-            opacity:0;
-        }}
 
-        25% {{
-            scale:1.45;
-            opacity:1;
-        }}
+@keyframes orbitB {{
 
-        45% {{
-            scale:.8;
-        }}
-
-        65% {{
-            scale:1.25;
-        }}
-
-        100% {{
-            scale:1;
-        }}
-
+    from {{
+        transform:
+            rotateY(70deg)
+            rotateZ(360deg);
     }}
 
-    @keyframes ringSpin {{
+    to {{
+        transform:
+            rotateY(70deg)
+            rotateZ(0deg);
+    }}
+}}
 
-        from {{
-            transform:
-                rotateX(65deg)
-                rotateZ(0deg)
-                scale(.6);
-        }}
 
-        to {{
-            transform:
-                rotateX(65deg)
-                rotateZ(360deg)
-                scale(1.1);
-        }}
+@keyframes orbitC {{
 
+    from {{
+        transform:
+            rotateX(40deg)
+            rotateY(55deg)
+            rotateZ(0deg);
     }}
 
-    @keyframes ringReverse {{
+    to {{
+        transform:
+            rotateX(40deg)
+            rotateY(55deg)
+            rotateZ(360deg);
+    }}
+}}
 
-        from {{
-            transform:
-                rotateY(65deg)
-                rotateZ(360deg);
-        }}
 
-        to {{
-            transform:
-                rotateY(65deg)
-                rotateZ(0deg);
-        }}
+/* ===========================================
+   3D 오브젝트
+=========================================== */
 
+.object {{
+
+    width:105px;
+    height:105px;
+
+    position:relative;
+
+    transform-style:preserve-3d;
+
+    z-index:5;
+
+    animation:
+        mutate
+        4s
+        cubic-bezier(.45,0,.55,1)
+        forwards;
+}}
+
+
+.face {{
+
+    position:absolute;
+
+    width:105px;
+    height:105px;
+
+    border:
+        1px solid
+        rgba(235,240,255,.78);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.26),
+            rgba(130,140,220,.10)
+        );
+
+    box-shadow:
+        inset 0 0 28px
+        rgba(170,180,255,.20),
+
+        0 0 18px
+        rgba(180,190,255,.20);
+
+    backdrop-filter:
+        blur(5px);
+
+    transition:
+        all .65s ease;
+}}
+
+
+.front {{
+    transform:
+        rotateY(0deg)
+        translateZ(52px);
+}}
+
+.back {{
+    transform:
+        rotateY(180deg)
+        translateZ(52px);
+}}
+
+.left {{
+    transform:
+        rotateY(-90deg)
+        translateZ(52px);
+}}
+
+.right {{
+    transform:
+        rotateY(90deg)
+        translateZ(52px);
+}}
+
+.top {{
+    transform:
+        rotateX(90deg)
+        translateZ(52px);
+}}
+
+.bottom {{
+    transform:
+        rotateX(-90deg)
+        translateZ(52px);
+}}
+
+
+/* 계속 형태가 변하도록 만든다. */
+
+@keyframes mutate {{
+
+    0% {{
+        transform:
+            rotateX(0deg)
+            rotateY(0deg)
+            rotateZ(0deg)
+            scale(.05);
     }}
 
-    @keyframes energyPulse {{
-
-        from {{
-            transform:scale(.65);
-            opacity:.25;
-        }}
-
-        to {{
-            transform:scale(1.4);
-            opacity:.65;
-        }}
-
+    10% {{
+        transform:
+            rotateX(160deg)
+            rotateY(250deg)
+            rotateZ(80deg)
+            scale(1.45);
     }}
 
-    @keyframes energyGrow {{
-
-        from {{
-            scale:.2;
-        }}
-
-        to {{
-            scale:1.6;
-        }}
-
+    20% {{
+        transform:
+            rotateX(380deg)
+            rotateY(540deg)
+            rotateZ(220deg)
+            scale(.55,1.60);
     }}
 
-    @keyframes shock {{
-
-        0% {{
-            transform:scale(.2);
-            opacity:.9;
-        }}
-
-        100% {{
-            transform:scale(6);
-            opacity:0;
-        }}
-
+    30% {{
+        transform:
+            rotateX(650deg)
+            rotateY(860deg)
+            rotateZ(390deg)
+            scale(1.60,.52);
     }}
 
-    @keyframes textPulse {{
-
-        from {{
-            transform:scale(.96);
-        }}
-
-        to {{
-            transform:scale(1.07);
-        }}
-
+    42% {{
+        transform:
+            rotateX(980deg)
+            rotateY(1180deg)
+            rotateZ(650deg)
+            scale(.50)
+            skewX(15deg);
     }}
 
-    </style>
+    55% {{
+        transform:
+            rotateX(1280deg)
+            rotateY(1540deg)
+            rotateZ(860deg)
+            scale(1.65);
+    }}
 
-    </head>
+    66% {{
+        transform:
+            rotateX(1570deg)
+            rotateY(1920deg)
+            rotateZ(1040deg)
+            scale(.65,1.48)
+            skewY(-12deg);
+    }}
 
-    <body>
+    77% {{
+        transform:
+            rotateX(1810deg)
+            rotateY(2200deg)
+            rotateZ(1280deg)
+            scale(1.45,.65);
+    }}
 
-    <div class="scene">
+    88% {{
+        transform:
+            rotateX(2070deg)
+            rotateY(2440deg)
+            rotateZ(1390deg)
+            scale(.60);
+    }}
 
-        <div class="energy"></div>
+    96% {{
+        transform:
+            rotateX(2160deg)
+            rotateY(2520deg)
+            rotateZ(1440deg)
+            scale(1.55);
+    }}
 
-        <div class="shockwave"></div>
-        <div class="shockwave second"></div>
+    100% {{
+        transform:
+            rotateX(25deg)
+            rotateY(35deg)
+            rotateZ(0deg)
+            scale(1);
+    }}
 
-        <div class="ring"></div>
-        <div class="ring2"></div>
+}}
 
-        <div class="cube">
 
-            <div class="face front"></div>
-            <div class="face back"></div>
-            <div class="face right"></div>
-            <div class="face left"></div>
-            <div class="face top"></div>
-            <div class="face bottom"></div>
+/* ===========================================
+   충격파
+=========================================== */
 
-        </div>
+.wave {{
 
-        <div class="text">
-            ✦ {label} ✦
-        </div>
+    position:absolute;
+
+    width:80px;
+    height:80px;
+
+    border:
+        2px solid
+        rgba(230,235,255,.5);
+
+    border-radius:50%;
+
+    opacity:0;
+
+    animation:
+        shock
+        1.1s
+        ease-out
+        infinite;
+}}
+
+
+.wave.w2 {{
+    animation-delay:.35s;
+}}
+
+.wave.w3 {{
+    animation-delay:.7s;
+}}
+
+
+@keyframes shock {{
+
+    0% {{
+        transform:scale(.2);
+        opacity:.65;
+    }}
+
+    100% {{
+        transform:scale(5.5);
+        opacity:0;
+    }}
+
+}}
+
+
+/* ===========================================
+   최종 등급 텍스트
+=========================================== */
+
+.grade {{
+
+    position:absolute;
+
+    bottom:20px;
+
+    width:100%;
+
+    text-align:center;
+
+    font-size:54px;
+
+    font-weight:1000;
+
+    letter-spacing:8px;
+
+    opacity:0;
+
+    transform:
+        scale(.25)
+        translateY(30px);
+
+    z-index:20;
+}}
+
+
+.grade.show {{
+
+    animation:
+        gradeShow
+        .65s
+        cubic-bezier(.12,.85,.25,1.3)
+        forwards;
+}}
+
+
+@keyframes gradeShow {{
+
+    0% {{
+        opacity:0;
+
+        transform:
+            scale(.25)
+            translateY(30px);
+    }}
+
+    70% {{
+        opacity:1;
+
+        transform:
+            scale(1.25)
+            translateY(0);
+    }}
+
+    100% {{
+        opacity:1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }}
+
+}}
+
+
+/* ===========================================
+   플래시
+=========================================== */
+
+.flash {{
+
+    position:absolute;
+
+    inset:0;
+
+    background:white;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    z-index:15;
+}}
+
+
+.flash.go {{
+
+    animation:
+        flashAnim
+        .48s
+        ease-out;
+}}
+
+
+@keyframes flashAnim {{
+
+    0% {{
+        opacity:0;
+    }}
+
+    30% {{
+        opacity:.85;
+    }}
+
+    100% {{
+        opacity:0;
+    }}
+
+}}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="scene">
+
+    <div
+        class="energy"
+        id="energy">
+    </div>
+
+    <div
+        class="orbit"
+        id="orbit1">
+    </div>
+
+    <div
+        class="orbit two"
+        id="orbit2">
+    </div>
+
+    <div
+        class="orbit three"
+        id="orbit3">
+    </div>
+
+
+    <div class="wave"></div>
+    <div class="wave w2"></div>
+    <div class="wave w3"></div>
+
+
+    <div
+        class="object"
+        id="object">
+
+        <div class="face front"></div>
+        <div class="face back"></div>
+        <div class="face left"></div>
+        <div class="face right"></div>
+        <div class="face top"></div>
+        <div class="face bottom"></div>
 
     </div>
 
-    </body>
-    </html>
-    """
+
+    <div
+        class="flash"
+        id="flash">
+    </div>
+
+
+    <div
+        class="grade"
+        id="grade">
+    </div>
+
+</div>
+
+
+<script>
+
+const rarity = "{rarity}";
+const finalColor = "{final_color}";
+
+const object =
+    document.getElementById("object");
+
+const faces =
+    document.querySelectorAll(".face");
+
+const energy =
+    document.getElementById("energy");
+
+const orbit1 =
+    document.getElementById("orbit1");
+
+const orbit2 =
+    document.getElementById("orbit2");
+
+const orbit3 =
+    document.getElementById("orbit3");
+
+const flash =
+    document.getElementById("flash");
+
+const grade =
+    document.getElementById("grade");
+
+
+/* -------------------------------------------
+   파티클 생성
+------------------------------------------- */
+
+const scene =
+    document.querySelector(".scene");
+
+for (
+    let i = 0;
+    i < 38;
+    i++
+) {{
+
+    const particle =
+        document.createElement("div");
+
+    particle.className =
+        "particle";
+
+    const angle =
+        Math.random()
+        * Math.PI
+        * 2;
+
+    const distance =
+        150
+        + Math.random()
+        * 210;
+
+    const x =
+        Math.cos(angle)
+        * distance;
+
+    const y =
+        Math.sin(angle)
+        * distance;
+
+    particle.style.setProperty(
+        "--x",
+        x + "px"
+    );
+
+    particle.style.setProperty(
+        "--y",
+        y + "px"
+    );
+
+    particle.style.left =
+        "50%";
+
+    particle.style.top =
+        "50%";
+
+    particle.style.animationDelay =
+        (
+            Math.random()
+            * 2
+        )
+        + "s";
+
+    scene.appendChild(
+        particle
+    );
+
+}}
+
+
+/* -------------------------------------------
+   약 4초 동안 결과를 숨긴 채 변형한다.
+------------------------------------------- */
+
+setTimeout(() => {{
+
+    flash.classList.add(
+        "go"
+    );
+
+    /* 변형 애니메이션 정지 */
+
+    object.style.animation =
+        "none";
+
+
+    /* 등급에 따라 최종 형태가 달라진다. */
+
+    if (
+        rarity === "F"
+    ) {{
+
+        object.style.transform =
+            "rotateX(12deg) rotateY(28deg) scale(.85)";
+
+    }}
+
+    else if (
+        rarity === "E"
+    ) {{
+
+        object.style.transform =
+            "rotateX(22deg) rotateY(35deg) rotateZ(10deg) scale(.92)";
+
+    }}
+
+    else if (
+        rarity === "D"
+    ) {{
+
+        object.style.transform =
+            "rotateX(45deg) rotateY(45deg) rotateZ(45deg) scale(.98)";
+
+    }}
+
+    else if (
+        rarity === "C"
+    ) {{
+
+        object.style.transform =
+            "rotateX(40deg) rotateY(45deg) rotateZ(45deg) scale(1.05,1.2)";
+
+    }}
+
+    else if (
+        rarity === "B"
+    ) {{
+
+        object.style.transform =
+            "rotateX(30deg) rotateY(45deg) rotateZ(45deg) scale(1.18,1.34)";
+
+    }}
+
+    else if (
+        rarity === "A"
+    ) {{
+
+        object.style.transform =
+            "rotateX(25deg) rotateY(45deg) rotateZ(45deg) scale(1.28,1.42)";
+
+    }}
+
+    else if (
+        rarity === "S"
+    ) {{
+
+        object.style.transform =
+            "rotateX(45deg) rotateY(45deg) rotateZ(45deg) scale(1.42)";
+
+    }}
+
+    else if (
+        rarity === "SS"
+    ) {{
+
+        object.style.transform =
+            "rotateX(25deg) rotateY(45deg) scale(1.58)";
+
+    }}
+
+    else {{
+
+        object.style.transform =
+            "rotateX(45deg) rotateY(45deg) rotateZ(45deg) scale(1.78)";
+
+    }}
+
+
+    /* 결과 등급 색은 이 순간 처음 적용한다. */
+
+    faces.forEach(
+        face => {{
+
+            face.style.borderColor =
+                finalColor;
+
+            face.style.background =
+                `linear-gradient(
+                    135deg,
+                    ${{finalColor}}88,
+                    ${{finalColor}}12
+                )`;
+
+            face.style.boxShadow =
+                `
+                inset 0 0 38px ${{finalColor}},
+                0 0 48px ${{finalColor}}
+                `;
+
+        }}
+    );
+
+
+    energy.style.background =
+        `radial-gradient(
+            circle,
+            ${{finalColor}},
+            ${{finalColor}}55,
+            transparent 70%
+        )`;
+
+    energy.style.filter =
+        "blur(34px)";
+
+
+    orbit1.style.borderColor =
+        finalColor;
+
+    orbit2.style.borderColor =
+        finalColor;
+
+    orbit3.style.borderColor =
+        finalColor;
+
+
+    orbit1.style.boxShadow =
+        `0 0 32px ${{finalColor}}`;
+
+    orbit2.style.boxShadow =
+        `0 0 25px ${{finalColor}}`;
+
+}}, 4000);
+
+
+/* -------------------------------------------
+   도형이 정지한 뒤 등급 공개
+------------------------------------------- */
+
+setTimeout(() => {{
+
+    grade.innerText =
+        rarity;
+
+    grade.style.color =
+        finalColor;
+
+    grade.style.textShadow =
+        `
+        0 0 10px ${{finalColor}},
+        0 0 28px ${{finalColor}},
+        0 0 60px ${{finalColor}}
+        `;
+
+    grade.classList.add(
+        "show"
+    );
+
+}}, 4550);
+
+
+</script>
+
+</body>
+
+</html>
+"""
 
     components.html(
-        animation,
-        height=370
+        animation_html,
+        height=440,
+        scrolling=False
     )
 
-    time.sleep(1.9)
+    # 결과 카드가 애니메이션보다 먼저 표시되지 않도록 기다린다.
+    time.sleep(5.25)
 
 
 # =========================================================
-# 카드 표시
+# 카드 HTML
 # =========================================================
 
 def card_html(result):
 
-    rarity = result["rarity"]
+    rarity = html.escape(
+        result.get(
+            "rarity",
+            "F"
+        )
+    )
 
-    name = html.escape(result["name"])
+    name = html.escape(
+        result.get(
+            "name",
+            "알 수 없는 카드"
+        )
+    )
 
-    description = html.escape(result["description"])
-
-    pity_badge = ""
-
-    if result["pity"]:
-
-        pity_badge = """
-        <div style="
-            display:inline-block;
-            background:#ffcb35;
-            color:#111;
-            padding:5px 9px;
-            border-radius:999px;
-            font-weight:900;
-            margin-bottom:10px;
-        ">
-            👑 100회 천장
-        </div>
-        """
+    description = html.escape(
+        result.get(
+            "description",
+            ""
+        )
+    )
 
     return f"""
     <div class="gacha-card r-{rarity}">
-
-        {pity_badge}
-
-        <div class="card-rarity">
-            {rarity}
-        </div>
 
         <div class="card-name">
             {name}
@@ -1073,44 +1801,48 @@ def card_html(result):
             {description}
         </div>
 
-        <div style="
-            margin-top:15px;
-            opacity:.48;
-            font-size:12px;
-        ">
-            #{result["pull_number"]} 번째 뽑기
-        </div>
-
     </div>
     """
 
 
 def show_results(results):
 
-    # 10연차는 5장씩 2줄
-    if len(results) == 10:
-
-        for row in range(2):
-
-            cols = st.columns(5)
-
-            for i in range(5):
-
-                index = row * 5 + i
-
-                with cols[i]:
-
-                    st.markdown(
-                        card_html(results[index]),
-                        unsafe_allow_html=True
-                    )
-
-    else:
+    # 1회 뽑기
+    if len(results) == 1:
 
         st.markdown(
-            card_html(results[0]),
+            card_html(
+                results[0]
+            ),
             unsafe_allow_html=True
         )
+
+        return
+
+
+    # 10연차
+    # 화면이 너무 좁아지는 것을 방지하기 위해 2장씩 5줄로 표시한다.
+    for row in range(5):
+
+        cols = st.columns(2)
+
+        for col_index in range(2):
+
+            result_index = (
+                row * 2
+                + col_index
+            )
+
+            with cols[col_index]:
+
+                st.markdown(
+                    card_html(
+                        results[
+                            result_index
+                        ]
+                    ),
+                    unsafe_allow_html=True
+                )
 
 
 # =========================================================
@@ -1118,13 +1850,31 @@ def show_results(results):
 # =========================================================
 
 st.markdown(
-    '<div class="main-title">🎴 성지온 냄새 뽑기 🎴</div>',
+    """
+    <div class="main-title">
+        🎴 성지온 냄새 뽑기 🎴
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
 st.markdown(
-    '<div class="subtitle">137종의 전설적인 성지온 냄새 카드를 수집하라</div>',
+    """
+    <div class="subtitle">
+        137종의 성지온 냄새 카드를 수집하라
+    </div>
+    """,
     unsafe_allow_html=True
+)
+
+
+# =========================================================
+# 전체 카드 수
+# =========================================================
+
+TOTAL_CARD_TYPES = sum(
+    len(cards)
+    for cards in CARDS.values()
 )
 
 
@@ -1132,32 +1882,52 @@ st.markdown(
 # 천장 상태
 # =========================================================
 
-current_cycle = st.session_state.total_pulls % 100
+current_pity_progress = (
+    st.session_state.total_pulls
+    % 100
+)
 
-until_pity = 100 - current_cycle
+remaining = (
+    100
+    - current_pity_progress
+)
 
-if current_cycle == 0 and st.session_state.total_pulls > 0:
-    until_pity = 100
+if (
+    current_pity_progress == 0
+    and
+    st.session_state.total_pulls > 0
+):
+
+    remaining = 100
 
 
 st.markdown(
     f"""
     <div class="pity-box">
-        👑 <b>SS 확정 천장</b><br><br>
-        다음 확정 SS까지
-        <span style="
-            font-size:30px;
-            font-weight:1000;
-        ">
-            {until_pity}
+
+        👑 <b>100회 SS 확정 천장</b>
+
+        <br><br>
+
+        다음 SS 확정까지
+
+        <span class="pity-big">
+            {remaining}
         </span>
-        회
+
+        회다.
+
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.progress(current_cycle / 100)
+st.write("")
+
+st.progress(
+    current_pity_progress
+    / 100
+)
 
 
 # =========================================================
@@ -1166,53 +1936,51 @@ st.progress(current_cycle / 100)
 
 st.write("")
 
-left, right = st.columns(2)
+button_left, button_right = (
+    st.columns(2)
+)
 
+with button_left:
 
-# =========================================================
-# 1회 뽑기
-# =========================================================
-
-with left:
-
-    single = st.button(
+    single_button = st.button(
         "🎲 1회 뽑기",
         use_container_width=True,
         type="primary"
     )
 
+with button_right:
 
-# =========================================================
-# 10회 뽑기
-# =========================================================
-
-with right:
-
-    multi = st.button(
+    ten_button = st.button(
         "🔥 10회 뽑기",
         use_container_width=True
     )
 
 
 # =========================================================
-# 1회 결과
+# 1회 뽑기
 # =========================================================
 
-if single:
+if single_button:
 
     result = draw_one()
 
+    # 결과 카드보다 연출이 먼저 나온다.
     summon_animation(
         result["rarity"],
         multi=False
     )
 
-    show_results([result])
+    show_results(
+        [result]
+    )
 
-    if result["pity"]:
+    if result.get(
+        "pity",
+        False
+    ):
 
         st.success(
-            "👑 100회 천장 발동 — SS 등급이 확정 등장했다."
+            "👑 100회 천장이 발동해 SS 등급이 확정 등장했다."
         )
 
     elif result["rarity"] == "SSS":
@@ -1220,7 +1988,7 @@ if single:
         st.balloons()
 
         st.success(
-            "🌈 SSS 등장 — 모든 미사여구를 초월하고 그냥 성지온이 등장했다."
+            "🌈 SSS 등급이 등장했다. 모든 미사여구의 끝은 그냥 성지온이다."
         )
 
     elif result["rarity"] == "SS":
@@ -1228,55 +1996,66 @@ if single:
         st.balloons()
 
         st.success(
-            "👑 SS 초희귀 카드가 등장했다."
+            "👑 SS 등급이 등장했다."
         )
 
     elif result["rarity"] == "S":
 
         st.success(
-            "⭐ S 전설 카드가 등장했다."
+            "⭐ S 등급이 등장했다."
         )
 
 
 # =========================================================
-# 10연차 결과
+# 10회 뽑기
 # =========================================================
 
-if multi:
+if ten_button:
 
-    results = draw_many(10)
+    results = draw_many(
+        10
+    )
 
     highest = max(
         results,
-        key=lambda x: RARITY_ORDER[x["rarity"]]
+        key=lambda item:
+            RARITY_ORDER[
+                item["rarity"]
+            ]
     )
 
+    # 가장 높은 등급을 기준으로 연출하되,
+    # 화면에는 마지막 순간까지 무엇인지 보이지 않는다.
     summon_animation(
         highest["rarity"],
         multi=True
     )
 
-    show_results(results)
+    show_results(
+        results
+    )
 
-    pity_cards = [
-        r
-        for r in results
-        if r["pity"]
-    ]
 
-    ss_or_higher = [
-        r
-        for r in results
-        if RARITY_ORDER[r["rarity"]] >= RARITY_ORDER["SS"]
-    ]
+    pity_result_exists = any(
+        result.get(
+            "pity",
+            False
+        )
+        for result in results
+    )
 
-    if pity_cards:
+
+    if pity_result_exists:
 
         st.success(
-            "👑 이번 10연차에서 100회 천장이 발동해 SS가 확정 등장했다."
+            "👑 이번 10연차에서 100회 SS 확정 천장이 발동했다."
         )
 
-    if any(r["rarity"] == "SSS" for r in results):
+
+    if any(
+        result["rarity"] == "SSS"
+        for result in results
+    ):
 
         st.balloons()
 
@@ -1284,7 +2063,16 @@ if multi:
             "🌈 10연차에서 SSS가 등장했다. 그냥 성지온이다."
         )
 
-    elif ss_or_higher:
+
+    elif any(
+        RARITY_ORDER[
+            result["rarity"]
+        ]
+        >=
+        RARITY_ORDER["SS"]
+
+        for result in results
+    ):
 
         st.balloons()
 
@@ -1295,70 +2083,97 @@ if multi:
 
 st.divider()
 
-total_cards = sum(
-    len(cards)
-    for cards in CARDS.values()
+stat1, stat2, stat3, stat4 = (
+    st.columns(4)
 )
 
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
+with stat1:
 
     st.metric(
         "총 뽑기",
         st.session_state.total_pulls
     )
 
-with col2:
 
-    st.metric(
-        "수집 카드",
-        f"{len(st.session_state.collection)} / {total_cards}"
+with stat2:
+
+    collected_count = len(
+        st.session_state.collection
     )
 
-with col3:
+    st.metric(
+        "수집한 카드",
+        f"{collected_count} / {TOTAL_CARD_TYPES}"
+    )
 
-    if st.session_state.total_pulls == 0:
 
-        best = "-"
+with stat3:
+
+    if (
+        st.session_state.history
+    ):
+
+        best_rarity = max(
+            (
+                result.get(
+                    "rarity",
+                    "F"
+                )
+                for result
+                in st.session_state.history
+            ),
+
+            key=lambda rarity:
+                RARITY_ORDER.get(
+                    rarity,
+                    0
+                )
+        )
 
     else:
 
-        best = max(
-            (
-                result["rarity"]
-                for result in st.session_state.history
-            ),
-            key=lambda rarity: RARITY_ORDER[rarity]
-        )
+        best_rarity = "-"
 
     st.metric(
         "최고 등급",
-        best
+        best_rarity
     )
 
-with col4:
+
+with stat4:
 
     ss_count = sum(
+
         1
-        for x in st.session_state.history
-        if x["rarity"] == "SS"
+
+        for result
+        in st.session_state.history
+
+        if result.get(
+            "rarity"
+        )
+        in [
+            "SS",
+            "SSS"
+        ]
     )
 
     st.metric(
-        "SS 획득",
+        "SS 이상 획득",
         ss_count
     )
 
 
 # =========================================================
-# 확률표
+# 확률
 # =========================================================
 
-with st.expander("📊 등급별 기본 확률"):
+with st.expander(
+    "📊 등급별 기본 확률"
+):
 
     st.caption(
-        "100번째, 200번째, 300번째… 뽑기는 아래 확률 계산을 생략하고 SS가 확정된다."
+        "100번째, 200번째, 300번째처럼 100의 배수가 되는 뽑기는 기본 확률을 무시하고 SS가 확정된다."
     )
 
     for rarity, probability in zip(
@@ -1367,58 +2182,113 @@ with st.expander("📊 등급별 기본 확률"):
     ):
 
         st.write(
-            f"**{rarity}** — {probability}% "
-            f"({len(CARDS[rarity])}종)"
+            f"**{rarity}** — "
+            f"{probability}% / "
+            f"{len(CARDS[rarity])}종"
         )
 
 
 # =========================================================
-# 도감
+# 카드 도감
 # =========================================================
 
-with st.expander("📚 냄새 카드 도감"):
+with st.expander(
+    "📚 냄새 카드 도감"
+):
 
     for rarity in RARITIES:
 
         st.subheader(
-            f"{rarity} 등급 · {len(CARDS[rarity])}종"
+            f"{rarity} 등급 · "
+            f"{len(CARDS[rarity])}종"
         )
 
         for card in CARDS[rarity]:
 
-            count = st.session_state.collection.get(
-                card["name"],
-                0
+            key = (
+                f'{rarity}|{card["name"]}'
             )
 
-            if count > 0:
+            amount = (
+                st.session_state.collection.get(
+                    key,
+                    0
+                )
+            )
+
+            if amount > 0:
+
+                safe_name = (
+                    html.escape(
+                        card["name"]
+                    )
+                )
+
+                safe_description = (
+                    html.escape(
+                        card["description"]
+                    )
+                )
 
                 st.markdown(
                     f"""
-                    **✅ {card["name"]}**
+                    <div class="collection-item">
 
-                    {card["description"]}
+                        <b>
+                            ✅ {safe_name}
+                        </b>
 
-                    보유 수량: **{count}장**
-                    """
+                        <br><br>
+
+                        <span style="
+                            opacity:.70;
+                        ">
+                            {safe_description}
+                        </span>
+
+                        <br><br>
+
+                        <span style="
+                            opacity:.55;
+                            font-size:12px;
+                        ">
+                            보유 수량: {amount}장
+                        </span>
+
+                    </div>
+                    """,
+                    unsafe_allow_html=True
                 )
 
             else:
 
-                st.write(
-                    "❓ 아직 발견하지 못한 카드"
-                )
+                st.markdown(
+                    """
+                    <div class="collection-item">
 
-        st.divider()
+                        <span style="
+                            opacity:.45;
+                        ">
+                            ❓ 아직 발견하지 못한 카드
+                        </span>
+
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
 
 # =========================================================
 # 최근 기록
 # =========================================================
 
-with st.expander("🕘 최근 뽑기 기록"):
+with st.expander(
+    "🕘 최근 뽑기 기록"
+):
 
-    if not st.session_state.history:
+    if not (
+        st.session_state.history
+    ):
 
         st.write(
             "아직 뽑기 기록이 없다."
@@ -1426,19 +2296,45 @@ with st.expander("🕘 최근 뽑기 기록"):
 
     else:
 
-        for result in st.session_state.history[:50]:
+        for result in (
+            st.session_state.history[:50]
+        ):
 
             pity_text = (
                 " 👑 천장"
-                if result["pity"]
+                if result.get(
+                    "pity",
+                    False
+                )
                 else ""
             )
 
+            pull_number = (
+                result.get(
+                    "pull_number",
+                    "?"
+                )
+            )
+
+            rarity = (
+                result.get(
+                    "rarity",
+                    "?"
+                )
+            )
+
+            name = (
+                result.get(
+                    "name",
+                    "알 수 없는 카드"
+                )
+            )
+
             st.write(
-                f'#{result["pull_number"]} '
-                f'**[{result["rarity"]}]** '
-                f'{result["name"]}'
-                f'{pity_text}'
+                f"#{pull_number} "
+                f"**[{rarity}]** "
+                f"{name}"
+                f"{pity_text}"
             )
 
 
@@ -1449,11 +2345,13 @@ with st.expander("🕘 최근 뽑기 기록"):
 st.divider()
 
 if st.button(
-    "🗑️ 모든 기록 초기화"
+    "🗑️ 모든 뽑기 기록 초기화"
 ):
 
     st.session_state.total_pulls = 0
+
     st.session_state.history = []
+
     st.session_state.collection = {}
 
     st.rerun()
