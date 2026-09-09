@@ -2307,10 +2307,7 @@ if page == "🎲 뽑기":
 
     st.write("")
 
-    button_1,
-    button_10 = st.columns(
-        2
-    )
+   button_1, button_10 = st.columns(2)
 
 
     with button_1:
@@ -2443,11 +2440,7 @@ if page == "🎲 뽑기":
 
     st.divider()
 
-    stat1,
-    stat2,
-    stat3 = st.columns(
-        3
-    )
+    stat1, stat2, stat3 = st.columns(3)
 
 
     with stat1:
