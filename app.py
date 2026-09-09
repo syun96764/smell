@@ -1248,11 +1248,9 @@ def show_results(results):
 
 def summon_animation(rarity):
 
-    final_color = (
-        RARITY_COLORS[rarity]
-    )
+    final_color = RARITY_COLORS[rarity]
 
-    animation_html = f"""
+    animation_html = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -1260,82 +1258,56 @@ def summon_animation(rarity):
 
 <style>
 
-* {{
-    box-sizing:
-        border-box;
-}}
+* {
+    box-sizing: border-box;
+}
 
-body {{
-
-    margin:
-        0;
-
-    overflow:
-        hidden;
-
-    background:
-        transparent;
+body {
+    margin: 0;
+    overflow: hidden;
+    background: transparent;
 
     font-family:
         Arial,
         sans-serif;
-}}
+}
 
+.scene {
+    position: relative;
 
-.scene {{
+    height: 440px;
 
-    position:
-        relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    height:
-        440px;
+    perspective: 1200px;
 
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    perspective:
-        1200px;
-
-    overflow:
-        hidden;
+    overflow: hidden;
 
     background:
-
         radial-gradient(
             circle at center,
             rgba(100,105,190,.10),
             rgba(25,25,50,.04) 35%,
             transparent 68%
         );
-}}
+}
 
 
-/* ====================================
-   에너지 구체
-==================================== */
+/* ======================================================
+   에너지
+====================================================== */
 
-.energy {{
+.energy {
+    position: absolute;
 
-    position:
-        absolute;
+    width: 170px;
+    height: 170px;
 
-    width:
-        170px;
-
-    height:
-        170px;
-
-    border-radius:
-        50%;
+    border-radius: 50%;
 
     background:
-
         radial-gradient(
             circle,
             rgba(235,238,255,.75),
@@ -1343,214 +1315,167 @@ body {{
             transparent 70%
         );
 
-    filter:
-        blur(28px);
+    filter: blur(28px);
 
     animation:
-
         energy-pulse
         .50s
         ease-in-out
         infinite
         alternate;
-}}
+}
+
+@keyframes energy-pulse {
+
+    from {
+        transform: scale(.48);
+        opacity: .20;
+    }
+
+    to {
+        transform: scale(1.35);
+        opacity: .52;
+    }
+}
 
 
-@keyframes energy-pulse {{
-
-    from {{
-
-        transform:
-            scale(.48);
-
-        opacity:
-            .20;
-    }}
-
-    to {{
-
-        transform:
-            scale(1.35);
-
-        opacity:
-            .52;
-    }}
-}}
-
-
-/* ====================================
+/* ======================================================
    회전 궤도
-==================================== */
+====================================================== */
 
-.orbit {{
+.orbit {
+    position: absolute;
 
-    position:
-        absolute;
-
-    width:
-        260px;
-
-    height:
-        260px;
+    width: 260px;
+    height: 260px;
 
     border:
         1px solid
         rgba(225,230,255,.42);
 
-    border-radius:
-        50%;
+    border-radius: 50%;
 
     animation:
         orbit-a
         .72s
         linear
         infinite;
-}}
+}
 
 
-.orbit.two {{
+.orbit.two {
+    width: 205px;
+    height: 205px;
 
-    width:
-        205px;
+    border-style: dashed;
 
-    height:
-        205px;
-
-    border-style:
-        dashed;
-
-    opacity:
-        .65;
+    opacity: .65;
 
     animation:
         orbit-b
         .52s
         linear
         infinite;
-}}
+}
 
 
-.orbit.three {{
+.orbit.three {
+    width: 320px;
+    height: 320px;
 
-    width:
-        320px;
-
-    height:
-        320px;
-
-    opacity:
-        .23;
+    opacity: .23;
 
     animation:
         orbit-c
         1.1s
         linear
         infinite;
-}}
+}
 
 
-@keyframes orbit-a {{
+@keyframes orbit-a {
 
-    from {{
-
+    from {
         transform:
             rotateX(68deg)
             rotateZ(0deg);
-    }}
+    }
 
-    to {{
-
+    to {
         transform:
             rotateX(68deg)
             rotateZ(360deg);
-    }}
-}}
+    }
+}
 
 
-@keyframes orbit-b {{
+@keyframes orbit-b {
 
-    from {{
-
+    from {
         transform:
             rotateY(72deg)
             rotateZ(360deg);
-    }}
+    }
 
-    to {{
-
+    to {
         transform:
             rotateY(72deg)
             rotateZ(0deg);
-    }}
-}}
+    }
+}
 
 
-@keyframes orbit-c {{
+@keyframes orbit-c {
 
-    from {{
-
+    from {
         transform:
             rotateX(40deg)
             rotateY(55deg)
             rotateZ(0deg);
-    }}
+    }
 
-    to {{
-
+    to {
         transform:
             rotateX(40deg)
             rotateY(55deg)
             rotateZ(360deg);
-    }}
-}}
+    }
+}
 
 
-/* ====================================
-   3D 도형
-==================================== */
+/* ======================================================
+   3D 오브젝트
+====================================================== */
 
-.object {{
+.object {
+    position: relative;
 
-    position:
-        relative;
+    width: 110px;
+    height: 110px;
 
-    width:
-        110px;
+    transform-style: preserve-3d;
 
-    height:
-        110px;
-
-    transform-style:
-        preserve-3d;
-
-    z-index:
-        5;
+    z-index: 5;
 
     animation:
         chaos
         4s
         cubic-bezier(.45,0,.55,1)
         forwards;
-}}
+}
 
 
-.face {{
+.face {
+    position: absolute;
 
-    position:
-        absolute;
-
-    width:
-        110px;
-
-    height:
-        110px;
+    width: 110px;
+    height: 110px;
 
     border:
         1px solid
         rgba(235,240,255,.75);
 
     background:
-
         linear-gradient(
             135deg,
             rgba(255,255,255,.26),
@@ -1558,7 +1483,6 @@ body {{
         );
 
     box-shadow:
-
         inset 0 0 30px
         rgba(175,185,255,.16),
 
@@ -1570,467 +1494,357 @@ body {{
 
     transition:
         all .65s ease;
-}}
+}
 
 
-.front {{
+.front {
     transform:
         rotateY(0deg)
         translateZ(55px);
-}}
+}
 
-.back {{
+.back {
     transform:
         rotateY(180deg)
         translateZ(55px);
-}}
+}
 
-.left {{
+.left {
     transform:
         rotateY(-90deg)
         translateZ(55px);
-}}
+}
 
-.right {{
+.right {
     transform:
         rotateY(90deg)
         translateZ(55px);
-}}
+}
 
-.top {{
+.top {
     transform:
         rotateX(90deg)
         translateZ(55px);
-}}
+}
 
-.bottom {{
+.bottom {
     transform:
         rotateX(-90deg)
         translateZ(55px);
-}}
+}
 
 
-@keyframes chaos {{
+/* ======================================================
+   뽑기 중 형태 변환
+====================================================== */
 
-    0% {{
+@keyframes chaos {
 
+    0% {
         transform:
-
             rotateX(0deg)
             rotateY(0deg)
             rotateZ(0deg)
-
             scale(.05);
-    }}
+    }
 
-
-    10% {{
-
+    10% {
         transform:
-
             rotateX(160deg)
             rotateY(240deg)
             rotateZ(80deg)
-
             scale(1.35);
-    }}
+    }
 
-
-    20% {{
-
+    20% {
         transform:
-
             rotateX(390deg)
             rotateY(560deg)
             rotateZ(220deg)
+            scale(.55, 1.55);
+    }
 
-            scale(.55,1.55);
-    }}
-
-
-    31% {{
-
+    31% {
         transform:
-
             rotateX(650deg)
             rotateY(850deg)
             rotateZ(410deg)
+            scale(1.55, .52);
+    }
 
-            scale(1.55,.52);
-    }}
-
-
-    42% {{
-
+    42% {
         transform:
-
             rotateX(970deg)
             rotateY(1180deg)
             rotateZ(630deg)
-
             scale(.48)
-
             skewX(15deg);
-    }}
+    }
 
-
-    54% {{
-
+    54% {
         transform:
-
             rotateX(1280deg)
             rotateY(1540deg)
             rotateZ(840deg)
-
             scale(1.65);
-    }}
+    }
 
-
-    66% {{
-
+    66% {
         transform:
-
             rotateX(1570deg)
             rotateY(1900deg)
             rotateZ(1060deg)
-
-            scale(.62,1.45)
-
+            scale(.62, 1.45)
             skewY(-13deg);
-    }}
+    }
 
-
-    78% {{
-
+    78% {
         transform:
-
             rotateX(1830deg)
             rotateY(2200deg)
             rotateZ(1260deg)
+            scale(1.45, .63);
+    }
 
-            scale(1.45,.63);
-    }}
-
-
-    89% {{
-
+    89% {
         transform:
-
             rotateX(2070deg)
             rotateY(2440deg)
             rotateZ(1390deg)
-
             scale(.55);
-    }}
+    }
 
-
-    96% {{
-
+    96% {
         transform:
-
             rotateX(2160deg)
             rotateY(2520deg)
             rotateZ(1440deg)
-
             scale(1.58);
-    }}
+    }
 
-
-    100% {{
-
+    100% {
         transform:
-
             rotateX(25deg)
             rotateY(35deg)
             rotateZ(0deg)
-
             scale(1);
-    }}
+    }
+}
 
-}}
 
-
-/* ====================================
+/* ======================================================
    충격파
-==================================== */
+====================================================== */
 
-.wave {{
+.wave {
+    position: absolute;
 
-    position:
-        absolute;
-
-    width:
-        80px;
-
-    height:
-        80px;
+    width: 80px;
+    height: 80px;
 
     border:
         2px solid
         rgba(230,235,255,.48);
 
-    border-radius:
-        50%;
+    border-radius: 50%;
 
-    opacity:
-        0;
+    opacity: 0;
 
     animation:
         shockwave
         1.05s
         ease-out
         infinite;
-}}
+}
 
 
-.wave.two {{
-    animation-delay:
-        .34s;
-}}
+.wave.two {
+    animation-delay: .34s;
+}
+
+.wave.three {
+    animation-delay: .68s;
+}
 
 
-.wave.three {{
-    animation-delay:
-        .68s;
-}}
+@keyframes shockwave {
+
+    0% {
+        transform: scale(.20);
+        opacity: .62;
+    }
+
+    100% {
+        transform: scale(5.5);
+        opacity: 0;
+    }
+}
 
 
-@keyframes shockwave {{
+/* ======================================================
+   등급 텍스트
+====================================================== */
 
-    0% {{
+.grade {
+    position: absolute;
 
-        transform:
-            scale(.20);
+    bottom: 22px;
 
-        opacity:
-            .62;
-    }}
+    width: 100%;
 
-    100% {{
+    text-align: center;
 
-        transform:
-            scale(5.5);
+    font-size: 56px;
+    font-weight: 1000;
 
-        opacity:
-            0;
-    }}
+    letter-spacing: 9px;
 
-}}
-
-
-/* ====================================
-   등급 표시
-==================================== */
-
-.grade {{
-
-    position:
-        absolute;
-
-    bottom:
-        22px;
-
-    width:
-        100%;
-
-    text-align:
-        center;
-
-    font-size:
-        56px;
-
-    font-weight:
-        1000;
-
-    letter-spacing:
-        9px;
-
-    opacity:
-        0;
+    opacity: 0;
 
     transform:
         scale(.25)
         translateY(30px);
 
-    z-index:
-        20;
-}}
+    z-index: 20;
+}
 
 
-.grade.show {{
-
+.grade.show {
     animation:
         show-grade
         .65s
         cubic-bezier(.12,.85,.25,1.3)
         forwards;
-}}
-
-
-@keyframes show-grade {{
-
-    0% {{
-
-        opacity:
-            0;
-
-        transform:
-
-            scale(.25)
-            translateY(30px);
-    }}
-
-    70% {{
-
-        opacity:
-            1;
-
-        transform:
-
-            scale(1.24)
-            translateY(0);
-    }}
-
-    100% {{
-
-        opacity:
-            1;
-
-        transform:
-
-            scale(1)
-            translateY(0);
-    }}
-}}
-
-
-/* ====================================
-   플래시
-==================================== */
-
-.flash {{
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    background:
-        white;
-
-    opacity:
-        0;
-
-    pointer-events:
-        none;
-
-    z-index:
-        15;
-}}
-
-
-.flash.go {{
-
-    animation:
-        flash
-        .46s
-        ease-out;
-}}
-
-
-@keyframes flash {{
-
-    0% {{
-        opacity:
-            0;
-    }}
-
-    30% {{
-        opacity:
-            .82;
-    }}
-
-    100% {{
-        opacity:
-            0;
-    }}
 }
 
 
-/* ====================================
+@keyframes show-grade {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            scale(.25)
+            translateY(30px);
+    }
+
+    70% {
+        opacity: 1;
+
+        transform:
+            scale(1.24)
+            translateY(0);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
+}
+
+
+/* ======================================================
+   플래시
+====================================================== */
+
+.flash {
+    position: absolute;
+
+    inset: 0;
+
+    background: white;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 15;
+}
+
+
+.flash.go {
+    animation:
+        flash-animation
+        .46s
+        ease-out;
+}
+
+
+@keyframes flash-animation {
+
+    0% {
+        opacity: 0;
+    }
+
+    30% {
+        opacity: .82;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+
+/* ======================================================
    파티클
-==================================== */
+====================================================== */
 
-.particle {{
+.particle {
+    position: absolute;
 
-    position:
-        absolute;
+    left: 50%;
+    top: 50%;
 
-    left:
-        50%;
+    width: 4px;
+    height: 4px;
 
-    top:
-        50%;
+    border-radius: 50%;
 
-    width:
-        4px;
+    background: white;
 
-    height:
-        4px;
-
-    border-radius:
-        50%;
-
-    background:
-        white;
-
-    opacity:
-        0;
+    opacity: 0;
 
     animation:
-        particle
+        particle-animation
         2s
         linear
         infinite;
-}}
+}
 
 
-@keyframes particle {{
+@keyframes particle-animation {
 
-    0% {{
-
+    0% {
         transform:
             translate(0,0)
             scale(.2);
 
-        opacity:
-            0;
-    }}
+        opacity: 0;
+    }
 
-    20% {{
+    20% {
+        opacity: .60;
+    }
 
-        opacity:
-            .60;
-    }}
-
-    100% {{
-
+    100% {
         transform:
             translate(
                 var(--x),
                 var(--y)
             )
-
             scale(1.7);
 
-        opacity:
-            0;
-    }}
+        opacity: 0;
+    }
 }
 
 </style>
 </head>
+
 
 <body>
 
@@ -2089,10 +1903,10 @@ body {{
 <script>
 
 const rarity =
-    "{rarity}";
+    "__RARITY__";
 
 const finalColor =
-    "{final_color}";
+    "__FINAL_COLOR__";
 
 
 const object =
@@ -2141,22 +1955,22 @@ const scene =
     );
 
 
-/* ====================================
+/* ======================================================
    파티클 생성
-==================================== */
+====================================================== */
 
 for (
     let i = 0;
     i < 40;
     i++
-) {{
+) {
 
-    const p =
+    const particle =
         document.createElement(
             "div"
         );
 
-    p.className =
+    particle.className =
         "particle";
 
     const angle =
@@ -2177,17 +1991,17 @@ for (
         Math.sin(angle)
         * distance;
 
-    p.style.setProperty(
+    particle.style.setProperty(
         "--x",
         x + "px"
     );
 
-    p.style.setProperty(
+    particle.style.setProperty(
         "--y",
         y + "px"
     );
 
-    p.style.animationDelay =
+    particle.style.animationDelay =
         (
             Math.random()
             * 2
@@ -2195,18 +2009,17 @@ for (
         + "s";
 
     scene.appendChild(
-        p
+        particle
     );
+}
 
-}}
 
-
-/* ====================================
-   결과 직전
-==================================== */
+/* ======================================================
+   4초 후 결과 형태로 정지
+====================================================== */
 
 setTimeout(
-    () => {{
+    () => {
 
         flash.classList.add(
             "go"
@@ -2218,114 +2031,109 @@ setTimeout(
 
         if (
             rarity === "F"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(12deg) rotateY(28deg) scale(.82)";
-
-        }}
+        }
 
         else if (
             rarity === "E"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(22deg) rotateY(35deg) rotateZ(10deg) scale(.90)";
-
-        }}
+        }
 
         else if (
             rarity === "D"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(45deg) rotateY(45deg) rotateZ(45deg) scale(.98)";
-
-        }}
+        }
 
         else if (
             rarity === "C"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(40deg) rotateY(45deg) rotateZ(45deg) scale(1.05,1.18)";
-
-        }}
+        }
 
         else if (
             rarity === "B"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(30deg) rotateY(45deg) rotateZ(45deg) scale(1.17,1.32)";
-
-        }}
+        }
 
         else if (
             rarity === "A"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(25deg) rotateY(45deg) rotateZ(45deg) scale(1.28,1.42)";
-
-        }}
+        }
 
         else if (
             rarity === "S"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(45deg) rotateY(45deg) rotateZ(45deg) scale(1.42)";
-
-        }}
+        }
 
         else if (
             rarity === "SS"
-        ) {{
+        ) {
 
             object.style.transform =
                 "rotateX(25deg) rotateY(45deg) scale(1.58)";
+        }
 
-        }}
-
-        else {{
+        else {
 
             object.style.transform =
                 "rotateX(45deg) rotateY(45deg) rotateZ(45deg) scale(1.78)";
-
-        }}
+        }
 
 
         faces.forEach(
-            face => {{
+            face => {
 
                 face.style.borderColor =
                     finalColor;
 
                 face.style.background =
-                    `linear-gradient(
-                        135deg,
-                        ${{finalColor}}88,
-                        ${{finalColor}}12
-                    )`;
+                    "linear-gradient("
+                    + "135deg,"
+                    + finalColor
+                    + "88,"
+                    + finalColor
+                    + "12"
+                    + ")";
 
                 face.style.boxShadow =
-                    `
-                    inset 0 0 38px ${{finalColor}},
-                    0 0 50px ${{finalColor}}
-                    `;
+                    "inset 0 0 38px "
+                    + finalColor
+                    + ", 0 0 50px "
+                    + finalColor;
 
-            }}
+            }
         );
 
 
         energy.style.background =
-            `radial-gradient(
-                circle,
-                ${{finalColor}},
-                ${{finalColor}}50,
-                transparent 70%
-            )`;
+            "radial-gradient("
+            + "circle,"
+            + finalColor
+            + ","
+            + finalColor
+            + "50,"
+            + "transparent 70%"
+            + ")";
 
 
         orbit1.style.borderColor =
@@ -2337,23 +2145,26 @@ setTimeout(
         orbit3.style.borderColor =
             finalColor;
 
+
         orbit1.style.boxShadow =
-            `0 0 32px ${{finalColor}}`;
+            "0 0 32px "
+            + finalColor;
 
         orbit2.style.boxShadow =
-            `0 0 25px ${{finalColor}}`;
+            "0 0 25px "
+            + finalColor;
 
-    }},
+    },
     4000
 );
 
 
-/* ====================================
+/* ======================================================
    도형이 멈춘 뒤 등급 공개
-==================================== */
+====================================================== */
 
 setTimeout(
-    () => {{
+    () => {
 
         grade.innerText =
             rarity;
@@ -2362,17 +2173,18 @@ setTimeout(
             finalColor;
 
         grade.style.textShadow =
-            `
-            0 0 10px ${{finalColor}},
-            0 0 28px ${{finalColor}},
-            0 0 60px ${{finalColor}}
-            `;
+            "0 0 10px "
+            + finalColor
+            + ", 0 0 28px "
+            + finalColor
+            + ", 0 0 60px "
+            + finalColor;
 
         grade.classList.add(
             "show"
         );
 
-    }},
+    },
     4550
 );
 
@@ -2382,17 +2194,25 @@ setTimeout(
 </html>
 """
 
+    # f-string을 사용하지 않고 필요한 값만 치환한다.
+    animation_html = animation_html.replace(
+        "__RARITY__",
+        rarity
+    )
+
+    animation_html = animation_html.replace(
+        "__FINAL_COLOR__",
+        final_color
+    )
+
     components.html(
         animation_html,
         height=450,
         scrolling=False
     )
 
-    time.sleep(
-        5.15
-    )
-
-
+    # 애니메이션 종료 뒤 카드가 나오게 한다.
+    time.sleep(5.15)
 # =========================================================
 # 사이드바
 # =========================================================
