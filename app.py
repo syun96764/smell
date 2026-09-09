@@ -2307,7 +2307,7 @@ if page == "🎲 뽑기":
 
     st.write("")
 
-   button_1, button_10 = st.columns(2)
+    button_1, button_10 = st.columns(2)
 
 
     with button_1:
